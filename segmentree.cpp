@@ -15,7 +15,7 @@ void propagate(int node, int rozmiar) {
 	czy[node] = 0;
 }
 
-void update(int val, int l, int r, int node = 1, int L = 0, R = SIZE - 1) {
+void update(int val, int l, int r, int node = 1, int L = 0, int R = DSIZE - 1) {
 	if(czy[node])
 		propagate(node, R - L + 1);	
 
@@ -27,12 +27,12 @@ void update(int val, int l, int r, int node = 1, int L = 0, R = SIZE - 1) {
 	}
 	int M = (L+R) / 2;
 	update(val, l, r, 2*node, L, M);
-	update(val, l, r, 2*node+1. M+1, R);
+	update(val, l, r, 2*node+1, M+1, R);
 	
 	t[node] = t[2*node] + t[2*node+1];
 }
 
-ll query(int l, int r, int node = 1, int L = 0, R = SIZE - 1) {
+ll query(int l, int r, int node = 1, int L = 0, int R = DSIZE - 1) {
 	if(czy[node])
 		propagate(node, R - L + 1);
 
@@ -42,7 +42,8 @@ ll query(int l, int r, int node = 1, int L = 0, R = SIZE - 1) {
 		return t[node];
 	}
 
-	return query(val, l, r, 2*node, L, M) + query(val, l, r, 2*node+1. M+1, R);
+	int M = (L+R) / 2;
+	return query(l, r, 2*node, L, M) + query(l, r, 2*node+1, M+1, R);
 }
 
 inline void build() {
@@ -53,7 +54,7 @@ inline void build() {
 
 int main() {
 	ios_base::sync_with_stdio(false);
-	cint.tie(0);		cout.tie(0);
+	cin.tie(0);		cout.tie(0);
 
 	int n;	cin >> n;
 	for(int i = 1; i <=n; i++)
@@ -62,8 +63,18 @@ int main() {
 	build();
 
 	int q;	cin >> q;
-	
-
-
+	while(q--) {
+		string x; int a, b, c;	cin >> x;
+		if(x == "Query")
+		{
+			cin >> a >> b;
+			cout << query(a, b) << "\n";
+		}
+		else
+		{
+			cin >> a >> b >> c;
+			update(c, a, b);
+		}
+	}
 
 }
